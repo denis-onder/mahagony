@@ -28,7 +28,9 @@ export default function Permissions({ permissions }: Props) {
               <TableCell>{permission.code}</TableCell>
               <TableCell>{permission.description}</TableCell>
               <TableCell align="center">
-                <Button size="small">Delete</Button>
+                <Button size="small" color="error">
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
           ))}

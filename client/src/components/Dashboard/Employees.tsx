@@ -34,8 +34,12 @@ export default function Employees({ employees }: Props) {
               <TableCell>{employee.email}</TableCell>
               <TableCell>{employee.status ? "Active" : "Inactive"}</TableCell>
               <TableCell align="center">
-                <Button size="small">Assign</Button>
-                <Button size="small">Delete</Button>
+                <Button size="small" color="success">
+                  Assign
+                </Button>
+                <Button size="small" color="error">
+                  Delete
+                </Button>
               </TableCell>
             </TableRow>
           ))}
