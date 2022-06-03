@@ -38,7 +38,7 @@ export default class UserController implements BaseController<IUser> {
 
       return users;
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(404).json({ error });
 
       return [];
     }
@@ -47,11 +47,15 @@ export default class UserController implements BaseController<IUser> {
     try {
       const user = await this.userService.findById(req.params.id);
 
+      if (!user) {
+        throw new Error("Not found.");
+      }
+
       res.status(200).json(user);
 
       return user;
     } catch (error) {
-      res.status(400).json({ error });
+      res.status(404).json({ error });
 
       return null;
     }

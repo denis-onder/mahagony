@@ -27,7 +27,7 @@ class ExpressApplication {
     const userService = new UserService();
     const permissionService = new PermissionService();
 
-    const authController = new AuthenticationController();
+    const authController = new AuthenticationController(userService);
     const userController = new UserController(userService);
     const permissionController = new PermissionController(permissionService);
 

@@ -1,7 +1,7 @@
 import argon2 from "argon2";
 import { Request, Response, Router } from "express";
 import { generateToken } from "../utils/jwt";
-import { IUser, UserModel } from "../domain/User";
+import { IUser } from "../domain/User";
 import UserService from "../services/UserService";
 import authMiddleware from "../middleware/auth";
 import { AuthorizedRequest } from "../domain/AuthorizedRequest";
@@ -9,22 +9,18 @@ import { AuthorizedRequest } from "../domain/AuthorizedRequest";
 export default class AuthenticationController {
   router: Router;
 
-  constructor() {
+  constructor(private userService: UserService) {
     this.router = Router();
 
-    this.router.post("/register", this.register);
-    this.router.post("/login", this.login);
-    this.router.get("/me", authMiddleware, this.getMe);
-  }
-
-  get service(): UserService {
-    return new UserService();
+    this.router.post("/register", (req, res) => this.register(req, res));
+    this.router.post("/login", (req, res) => this.login(req, res));
+    this.router.get("/me", authMiddleware, (req, res) => this.getMe(req, res));
   }
 
   register(req: Request, res: Response): void {
     const user: IUser = req.body;
 
-    new UserService()
+    this.userService
       .create(user)
       .then((result) => {
         if (result) {
@@ -39,7 +35,7 @@ export default class AuthenticationController {
     const credentials: Partial<IUser> = req.body;
 
     if (credentials.email && credentials.password) {
-      const [user] = await new UserService().find({
+      const [user] = await this.userService.find({
         email: credentials.email,
       });
 
@@ -64,7 +60,9 @@ export default class AuthenticationController {
   }
   async getMe(req: AuthorizedRequest, res: Response): Promise<void> {
     try {
-      const user = await UserModel.findById(req.user?._id);
+      const user = await this.userService.findById(
+        String((req.user as IUser)._id)
+      );
 
       res.status(200).json(user);
     } catch (error) {
