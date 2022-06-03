@@ -11,14 +11,19 @@ export default async function (
   const token = req.headers.authorization;
   let user: IUser | null = null;
 
-  if (token) {
-    user = decodeToken(token);
-  }
+  try {
+    if (token) {
+      user = decodeToken(token);
+    }
 
-  if (user) {
+    if (!user || !user.status) {
+      throw new Error();
+    }
+
     req.user = (await UserModel.findById(user._id)) as IUser;
+
     next();
-  } else {
+  } catch {
     res.status(401).send("Unauthorized");
   }
 }
