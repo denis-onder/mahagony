@@ -18,10 +18,13 @@ import {
   secondaryListItems,
 } from "../components/Dashboard/DrawerListItems";
 import Employees from "../components/Dashboard/Employees";
+import Permissions from "../components/Dashboard/Permissions";
 import { useEffect, useState } from "react";
-import { users } from "../api";
+import * as api from "../api";
 import onError from "../utils/onError";
 import { User } from "../domain/User";
+import { Permission } from "../domain/Permission";
+import Loader from "../components/Loader";
 
 const drawerWidth: number = 240;
 
@@ -76,20 +79,33 @@ const Drawer = styled(MuiDrawer, {
 const mdTheme = createTheme();
 
 function DashboardContent() {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState<Array<User>>([]);
+  const [permissions, setPermissions] = useState<Array<Permission>>([]);
 
   useEffect(() => {
     function loadEmployees() {
-      return users.findUsers();
+      return api.users.findUsers();
+    }
+
+    function loadPermissions() {
+      return api.permissions.findPermissions();
     }
 
     async function load() {
       try {
+        setLoading(true);
+
         const employees = await loadEmployees();
+        const permissions = await loadPermissions();
+
         setEmployees(employees);
+        setPermissions(permissions);
       } catch (error) {
         onError(error);
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -99,6 +115,10 @@ function DashboardContent() {
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <ThemeProvider theme={mdTheme}>
@@ -167,11 +187,37 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            {/* Employees */}
             <Grid container spacing={3}>
-              {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                  <Typography
+                    variant="h6"
+                    component="h6"
+                    marginBottom="12px"
+                    marginLeft="6px"
+                  >
+                    Employees
+                  </Typography>
                   <Employees employees={employees} />
+                </Paper>
+              </Grid>
+            </Grid>
+            {/* Divider */}
+            <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />
+            {/* Permissions */}
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+                  <Typography
+                    variant="h6"
+                    component="h6"
+                    marginBottom="12px"
+                    marginLeft="6px"
+                  >
+                    Permissions
+                  </Typography>
+                  <Permissions permissions={permissions} />
                 </Paper>
               </Grid>
             </Grid>

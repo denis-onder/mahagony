@@ -20,10 +20,6 @@ export default class PermissionService implements BaseService<IPermission> {
     return await permission.save();
   }
   async find(query: object): Promise<Array<IPermission>> {
-    if (Object.keys(query).length === 0) {
-      return Promise.resolve([]);
-    }
-
     return await PermissionModel.find(query);
   }
   async findById(id: string): Promise<IPermission | null> {

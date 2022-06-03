@@ -4,5 +4,5 @@ export interface PermissionPayload {
 }
 
 export interface Permission extends PermissionPayload {
-  id: string;
+  _id: string;
 }
