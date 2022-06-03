@@ -1,4 +1,4 @@
-# Mahagony
+# Mahogany
 
 > A simple user management application written using React, Node.js, Express, TypeScript, Vite and MongoDB.
 

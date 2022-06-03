@@ -9,6 +9,7 @@ import UserController from "./controllers/UserController";
 import authMiddleware from "./middleware/auth";
 import PermissionService from "./services/PermissionService";
 import PermissionController from "./controllers/PermissionController";
+import cookieParser from "cookie-parser";
 
 class ExpressApplication {
   public app: express.Application;
@@ -18,9 +19,21 @@ class ExpressApplication {
   }
 
   private applyMiddleware(): void {
+    this.app.use(cookieParser());
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
-    this.app.use(cors());
+
+    const whitelist = ["http://localhost:3000"];
+    const corsOptions = {
+      credentials: true, // This is important.
+      origin: (origin: any, callback: any) => {
+        if (whitelist.includes(origin)) return callback(null, true);
+
+        callback(new Error("Not allowed by CORS"));
+      },
+    };
+
+    this.app.use(cors(corsOptions));
   }
 
   private configureRoutes(): void {

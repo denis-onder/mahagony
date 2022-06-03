@@ -1,3 +1,4 @@
+import validator from "validator";
 import argon2 from "argon2";
 import { Request, Response, Router } from "express";
 import { generateToken } from "../utils/jwt";
@@ -5,6 +6,11 @@ import { IUser } from "../domain/User";
 import UserService from "../services/UserService";
 import authMiddleware from "../middleware/auth";
 import { AuthorizedRequest } from "../domain/AuthorizedRequest";
+
+interface LoginPayload {
+  identifier: string;
+  password: string;
+}
 
 export default class AuthenticationController {
   router: Router;
@@ -32,31 +38,50 @@ export default class AuthenticationController {
       });
   }
   async login(req: Request, res: Response): Promise<void> {
-    const credentials: Partial<IUser> = req.body;
+    const credentials: Partial<LoginPayload> = req.body;
 
-    if (credentials.email && credentials.password) {
-      const [user] = await this.userService.find({
-        email: credentials.email,
-      });
-
-      if (!user) {
-        res.status(404).send("User not found.");
-      } else {
-        const isValid = await argon2.verify(
-          user.password,
-          credentials.password as string
-        );
-
-        if (isValid) {
-          const token = generateToken(user);
-          res.status(200).send(token);
-        } else {
-          res.status(401).send("Invalid password.");
-        }
-      }
-    } else {
-      res.status(400).send("Invalid credentials");
+    if (!credentials.identifier || !credentials.password) {
+      res.status(400).json({ error: "Missing credentials" });
+      return;
     }
+
+    let query = {};
+
+    if (validator.isEmail(credentials.identifier)) {
+      query = { email: credentials.identifier };
+    } else {
+      query = { username: credentials.identifier };
+    }
+
+    const [user] = await this.userService.find(query);
+
+    if (!user) {
+      res.status(404).send("User not found.");
+      return;
+    }
+
+    const isValid = await argon2.verify(
+      user.password,
+      credentials.password as string
+    );
+
+    if (!isValid) {
+      res.status(401).send("Invalid password.");
+      return;
+    }
+
+    const token = generateToken(user);
+    const expirationTimestamp = new Date(
+      new Date().getTime() + 60 * 60 * 24 * 1000
+    );
+
+    res
+      .status(200)
+      .cookie("token", token, {
+        httpOnly: true,
+        expires: expirationTimestamp,
+      })
+      .send(token);
   }
   async getMe(req: AuthorizedRequest, res: Response): Promise<void> {
     try {
