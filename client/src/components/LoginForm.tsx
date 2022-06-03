@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -7,9 +6,9 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Link } from "react-router-dom";
 
 interface Props {
   onLoginButtonClick: (data: { identifier: string; password: string }) => void;
@@ -84,7 +83,10 @@ export default function LoginForm({ onLoginButtonClick }: Props) {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="/register" variant="body2">
+                <Link
+                  to="/register"
+                  style={{ textDecoration: "none", color: "blue" }}
+                >
                   Don't have an account? Register here
                 </Link>
               </Grid>

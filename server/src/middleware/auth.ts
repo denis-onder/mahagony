@@ -8,7 +8,7 @@ export default async function (
   res: Response,
   next: NextFunction
 ): Promise<void> {
-  const token = req.headers.authorization;
+  const token = req.headers.authorization || req.cookies.token;
   let user: IUser | null = null;
 
   try {
