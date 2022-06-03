@@ -2,9 +2,9 @@ import { UserPayload } from "../domain/User";
 import onError from "../utils/onError";
 import client from "./client";
 
-export const login = async (email: string, password: string) => {
+export const login = async (identifier: string, password: string) => {
   try {
-    const response = await client.post("/auth/login", { email, password });
+    const response = await client.post("/auth/login", { identifier, password });
     return response.data;
   } catch (error) {
     onError(error);

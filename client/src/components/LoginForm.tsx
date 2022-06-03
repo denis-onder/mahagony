@@ -7,18 +7,27 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+interface Props {
+  onLoginButtonClick: (data: { identifier: string; password: string }) => void;
+}
 
 const theme = createTheme();
 
-export default function LoginForm() {
+export default function LoginForm({ onLoginButtonClick }: Props) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    const formData = new FormData(event.currentTarget);
+
+    const data = {
+      identifier: formData.get("identifier") as string,
+      password: formData.get("password") as string,
+    };
+
+    onLoginButtonClick(data);
   };
 
   return (
@@ -37,7 +46,7 @@ export default function LoginForm() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Login
           </Typography>
           <Box
             component="form"
@@ -50,9 +59,9 @@ export default function LoginForm() {
               required
               fullWidth
               id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              label="Email Address or Username"
+              name="identifier"
+              autoComplete="identifier"
               autoFocus
             />
             <TextField
@@ -71,8 +80,15 @@ export default function LoginForm() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Login
             </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="/register" variant="body2">
+                  Don't have an account? Register here
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
       </Container>
