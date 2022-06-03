@@ -53,7 +53,7 @@ export default class AuthenticationController {
 
         if (isValid) {
           const token = generateToken(user);
-          res.status(200).send(`Bearer ${token}`);
+          res.status(200).send(token);
         } else {
           res.status(401).send("Invalid password.");
         }

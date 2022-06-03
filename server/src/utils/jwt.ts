@@ -9,7 +9,6 @@ export function generateToken(user: IUser): string {
 }
 
 export function decodeToken(token: string): IUser | null {
-  token = token.replace("Bearer ", "");
   const decoded = jwt.verify(token, config.secret);
 
   if (decoded) {
