@@ -9,29 +9,44 @@ export default function (user: IUser): ValidatorResponse {
   };
 
   if (validator.isEmpty(user.firstName)) {
-    response.errors?.push("Please provide a first name.");
+    response.errors.push({
+      field: "firstName",
+      message: "First name is required.",
+    });
   }
   if (validator.isEmpty(user.lastName)) {
-    response.errors?.push("Please provide a first name.");
+    response.errors.push({
+      field: "lastName",
+      message: "Last name is required.",
+    });
   }
   if (validator.isEmpty(user.username)) {
-    response.errors?.push("Please provide a username.");
+    response.errors.push({
+      field: "username",
+      message: "Username is required.",
+    });
   }
   if (!validator.isEmail(user.email)) {
-    response.errors?.push("Please provide a valid email address.");
+    response.errors.push({
+      field: "email",
+      message: "Email is invalid.",
+    });
   }
   if (validator.isEmpty(user.password)) {
-    response.errors?.push("Please provide a valid password.");
+    response.errors.push({
+      field: "password",
+      message: "Password is required.",
+    });
   }
   if (user.password.length < 8) {
-    response.errors?.push(
-      "Your password has to be more than 8 characters long."
-    );
+    response.errors.push({
+      field: "password",
+      message: "Password must be at least 8 characters long.",
+    });
   }
 
-  if (response.errors && response.errors.length === 0) {
+  if (response.errors.length === 0) {
     response.valid = true;
-    delete response.errors;
   }
 
   return response;

@@ -1,4 +1,9 @@
+export interface ValidationError {
+  field: string;
+  message: string;
+}
+
 export interface ValidatorResponse {
   valid: boolean;
-  errors?: string[];
+  errors: Array<ValidationError>;
 }

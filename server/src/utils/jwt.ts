@@ -4,7 +4,7 @@ import config from "../config";
 
 export function generateToken(user: IUser): string {
   return jwt.sign({ ...user }, config.secret, {
-    expiresIn: "1h",
+    expiresIn: "24h",
   });
 }
 

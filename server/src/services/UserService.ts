@@ -8,8 +8,7 @@ export default class UserService implements BaseService<IUser> {
     const validatorResponse = userValidator(payload);
 
     if (!validatorResponse.valid) {
-      const message = validatorResponse.errors?.join("\n");
-      throw new Error(`Invalid Input:\n${message}`);
+      throw new Error(JSON.stringify(validatorResponse.errors));
     }
 
     const alreadyExists = await this.checkIfUserExists(
@@ -26,29 +25,31 @@ export default class UserService implements BaseService<IUser> {
     const user = new UserModel(payload);
     return await user.save();
   }
-  async find(query: object): Promise<IUser | null> {
-    if (Object.keys(query).length === 0) {
-      return Promise.resolve(null);
-    }
-
-    const payload = await UserModel.findOne(query);
-
-    return payload ? payload : null;
+  async find(query: object): Promise<Array<IUser>> {
+    return await UserModel.find(query);
   }
   async findById(id: string): Promise<IUser | null> {
     if (!id) {
       return Promise.resolve(null);
     }
 
-    const user = await UserModel.findById(id);
-
-    return user || null;
+    return await UserModel.findById(id);
   }
   update(id: string, payload: Partial<IUser>): Promise<IUser | null> {
     throw new Error("Method not implemented.");
   }
   async delete(id: string): Promise<boolean> {
-    await UserModel.findByIdAndDelete(id);
+    if (!id) {
+      return Promise.resolve(false);
+    }
+
+    const user = await UserModel.findById(id);
+
+    if (!user) {
+      return false;
+    }
+
+    await user.delete();
 
     return true;
   }

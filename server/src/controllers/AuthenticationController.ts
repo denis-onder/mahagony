@@ -39,7 +39,7 @@ export default class AuthenticationController {
     const credentials: Partial<IUser> = req.body;
 
     if (credentials.email && credentials.password) {
-      const user = await new UserService().find({
+      const [user] = await new UserService().find({
         email: credentials.email,
       });
 
@@ -63,8 +63,12 @@ export default class AuthenticationController {
     }
   }
   async getMe(req: AuthorizedRequest, res: Response): Promise<void> {
-    const user = await UserModel.findById(req.user?._id);
+    try {
+      const user = await UserModel.findById(req.user?._id);
 
-    res.status(200).json(user);
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error });
+    }
   }
 }

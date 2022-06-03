@@ -4,6 +4,9 @@ import config from "./config";
 import * as bodyParser from "body-parser";
 import AuthenticationController from "./controllers/AuthenticationController";
 import { connect } from "./database";
+import UserService from "./services/UserService";
+import UserController from "./controllers/UserController";
+import authMiddleware from "./middleware/auth";
 
 class ExpressApplication {
   public app: express.Application;
@@ -19,9 +22,13 @@ class ExpressApplication {
   }
 
   private configureRoutes(): void {
+    const userService = new UserService();
+
     const authController = new AuthenticationController();
+    const userController = new UserController(userService);
 
     this.app.use("/auth", authController.router);
+    this.app.use("/users", authMiddleware, userController.router);
   }
 
   public async start(): Promise<void> {
