@@ -1,5 +1,10 @@
 import { PaginatedResponse } from "../domain/PaginatedResponse";
-import { User, UserPayload, UserPaginationParams } from "../domain/User";
+import {
+  User,
+  UserPayload,
+  UserPaginationParams,
+  UserQueryParams,
+} from "../domain/User";
 import client from "./client";
 
 export const createUser = async (payload: UserPayload): Promise<User> => {
@@ -12,7 +17,7 @@ export const createUser = async (payload: UserPayload): Promise<User> => {
 };
 
 export const findUsers = async (
-  params: UserPaginationParams
+  params: UserQueryParams
 ): Promise<PaginatedResponse<User>> => {
   try {
     const response = await client.get("/users", {

@@ -1,9 +1,20 @@
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { users } from "../api";
 import { PaginatedResponse } from "../domain/PaginatedResponse";
-import { User, UserPayload } from "../domain/User";
+import { User, UserPayload, UserQueryParams } from "../domain/User";
 import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import toast from "react-hot-toast";
 import DeleteEntityModal from "../components/DeleteEntityModal";
@@ -11,6 +22,7 @@ import AddEmployeeModal from "../components/Employees/AddEmployeeModal";
 import EmployeesTable from "../components/Employees/EmployeesTable";
 import Loader from "../components/Loader";
 import onError from "../utils/onError";
+import useDebounce from "../utils/useDebounce";
 
 export default function Employees() {
   const LIMIT = 10;
@@ -23,15 +35,29 @@ export default function Employees() {
   const [page, setPage] = useState(1);
   const [changePage, setChangePage] = useState(false);
   const [triggerLoad, setTriggerLoad] = useState(false);
+  const [name, setName] = useState("");
+  const [status, setStatus] = useState<boolean | null>(null);
+
+  const debouncedName = useDebounce(name, 500);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     function loadEmployees() {
-      return users.findUsers({
+      const params: UserQueryParams = {
         limit: LIMIT,
         page: page,
-      });
+      };
+
+      if (name) {
+        params.name = name;
+      }
+
+      if (status !== null) {
+        params.status = status;
+      }
+
+      return users.findUsers(params);
     }
 
     async function load() {
@@ -51,7 +77,7 @@ export default function Employees() {
     }
 
     load();
-  }, [changePage, triggerLoad]);
+  }, [changePage, triggerLoad, debouncedName, status]);
 
   const onChangePage = (page: number) => {
     if (page === 0) page = 1;
@@ -119,6 +145,24 @@ export default function Employees() {
               <Button onClick={() => setShowAddEmployeeModal(true)}>
                 Add Employee
               </Button>
+            </Box>
+            <Box sx={{ marginBottom: 2 }}>
+              <TextField
+                placeholder="Search By Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <FormControl sx={{ marginLeft: 1, minWidth: 120 }}>
+                <InputLabel>Status?</InputLabel>
+                <Select
+                  value={`${status}`}
+                  label="Status?"
+                  onChange={(e) => setStatus(e.target.value === "true")}
+                >
+                  <MenuItem value="true">Active</MenuItem>
+                  <MenuItem value="false">Inactive</MenuItem>
+                </Select>
+              </FormControl>
             </Box>
             <EmployeesTable
               paginatedEmployeesResponse={response as PaginatedResponse<User>}

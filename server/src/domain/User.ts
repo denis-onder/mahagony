@@ -5,6 +5,15 @@ export interface UserPaginationParams {
   limit: number;
 }
 
+export interface UserFilteringParams {
+  name?: string;
+  status?: string;
+}
+
+export interface UserQueryParams
+  extends UserPaginationParams,
+    UserFilteringParams {}
+
 export interface IUser {
   _id: Schema.Types.ObjectId;
   firstName: string;

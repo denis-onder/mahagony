@@ -1,8 +1,10 @@
-import { UserPaginationParams } from "./../domain/User";
+import { UserQueryParams } from "./../domain/User";
 import argon2 from "argon2";
 import userValidator from "../validators/userValidator";
 import { IUser, UserModel } from "../domain/User";
 import BaseService from "../domain/BaseService";
+import { FilterQuery } from "mongoose";
+import { PaginatedResponse } from "../domain/PaginatedResponse";
 
 export default class UserService implements BaseService<IUser> {
   async create(payload: IUser): Promise<IUser> {
@@ -26,12 +28,46 @@ export default class UserService implements BaseService<IUser> {
     const user = new UserModel(payload);
     return await user.save();
   }
-  async find(params: UserPaginationParams): Promise<Array<IUser>> {
-    return await UserModel.find()
+  async find(params: UserQueryParams): Promise<PaginatedResponse<IUser>> {
+    let query: FilterQuery<IUser> = {};
+
+    if (params.name) {
+      query = {
+        $and: [
+          {
+            $or: [
+              { firstName: { $regex: params.name, $options: "i" } },
+              { lastName: { $regex: params.name, $options: "i" } },
+              { username: { $regex: params.name, $options: "i" } },
+              { email: { $regex: params.name, $options: "i" } },
+            ],
+          },
+        ],
+      };
+    }
+
+    if (params.status) {
+      if (query["$and"]) {
+        query["$and"].push({ status: params.status });
+      } else {
+        query["$and"] = [{ status: params.status === "true" }];
+      }
+    }
+
+    const results = await UserModel.find(query)
       .limit(params.limit * 1)
       .skip((params.page - 1) * params.limit)
       .select("-password")
       .exec();
+
+    const count = await UserModel.find(query).count();
+
+    return {
+      count,
+      currentPage: params.page,
+      results,
+      totalPages: count / params.limit,
+    };
   }
   async findById(id: string): Promise<IUser | null> {
     if (!id) {

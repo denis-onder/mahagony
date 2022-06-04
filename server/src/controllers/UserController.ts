@@ -1,5 +1,9 @@
 import { PaginatedResponse } from "./../domain/PaginatedResponse";
-import { UserModel, UserPaginationParams } from "./../domain/User";
+import {
+  UserFilteringParams,
+  UserModel,
+  UserPaginationParams,
+} from "./../domain/User";
 import { AuthorizedRequest } from "../domain/AuthorizedRequest";
 import { IUser } from "../domain/User";
 import BaseController from "../domain/BaseController";
@@ -37,20 +41,22 @@ export default class UserController implements BaseController<IUser> {
     res: Response
   ): Promise<PaginatedResponse<IUser>> {
     try {
-      const params: UserPaginationParams = {
+      const pagingParams: UserPaginationParams = {
         limit: req.query.limit ? parseInt(req.query.limit as string) : 10,
         page: req.query.page ? parseInt(req.query.page as string) : 1,
       };
 
-      const results = await this.userService.find(params);
-      const count = await UserModel.countDocuments();
-
-      const response = {
-        count,
-        results,
-        totalPages: Math.ceil(count / params.limit),
-        currentPage: params.page,
+      const filteringParams: UserFilteringParams = {
+        name: req.query.name as string,
+        status: req.query.status as string,
       };
+
+      const params = {
+        ...pagingParams,
+        ...filteringParams,
+      };
+
+      const response = await this.userService.find(params);
 
       res.status(200).json(response);
 

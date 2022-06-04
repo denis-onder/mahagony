@@ -14,6 +14,15 @@ export interface UserPaginationParams {
   limit: number;
 }
 
+export interface UserFilteringParams {
+  name?: string;
+  status?: boolean;
+}
+
+export interface UserQueryParams
+  extends UserPaginationParams,
+    UserFilteringParams {}
+
 export interface User extends UserPayload {
   _id: string;
   permissions: Array<Permission>;
