@@ -14,7 +14,7 @@
 
 ## Starting The Application
   1. Boot up the back-end by running `npm run dev` in the `/server` directory.
-  2. Boot up the front-end by running `npm run dev in the `/clie  nt` directory.
+  2. Boot up the front-end by running `npm run dev` in the `/client` directory.
 
 ## Links
   * [Postman Workspace](https://app.getpostman.com/join-team?invite_code=cf4119ffe86d03e5204a93f366b1bfbc&target_code=6102eda28e4202480bebb34b27ed30db)
