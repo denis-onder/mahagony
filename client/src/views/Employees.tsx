@@ -1,15 +1,18 @@
-import { Grid, Paper, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import { Fragment, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { users } from "../api";
+import AddEmployeeModal from "../components/Employees/AddEmployeeModal";
 import EmployeesTable from "../components/Employees/EmployeesTable";
 import Loader from "../components/Loader";
-import { User } from "../domain/User";
+import { User, UserPayload } from "../domain/User";
 import onError from "../utils/onError";
 
 export default function Employees() {
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState<Array<User>>([]);
+  const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -36,25 +39,57 @@ export default function Employees() {
     load();
   }, []);
 
+  const onAddEmployeeSubmit = async (payload: UserPayload) => {
+    try {
+      const user = await users.createUser(payload);
+
+      if (!user) {
+        onError("Failed to create user.");
+      }
+
+      setEmployees([...employees, user]);
+      toast.success("Employee Created Successfully!");
+    } catch (error) {
+      onError(error);
+    } finally {
+      setShowAddEmployeeModal(false);
+    }
+  };
+
   if (loading) {
     return <Loader />;
   }
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12}>
-        <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Typography
-            variant="h6"
-            component="h6"
-            marginBottom="12px"
-            marginLeft="6px"
-          >
-            Employees
-          </Typography>
-          <EmployeesTable employees={employees} />
-        </Paper>
+    <Fragment>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginBottom: "12px",
+                marginX: "6px",
+              }}
+            >
+              <Typography variant="h6" component="h6">
+                Employees
+              </Typography>
+              <Button onClick={() => setShowAddEmployeeModal(true)}>
+                Add Employee
+              </Button>
+            </Box>
+            <EmployeesTable employees={employees} />
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+      <AddEmployeeModal
+        open={showAddEmployeeModal}
+        onClose={() => setShowAddEmployeeModal(false)}
+        onSubmit={onAddEmployeeSubmit}
+      />
+    </Fragment>
   );
 }

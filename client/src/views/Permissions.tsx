@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography } from "@mui/material";
+import { Button, Grid, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as api from "../api";
@@ -6,6 +6,7 @@ import PermissionsTable from "../components/Permissions/PermissionsTable";
 import Loader from "../components/Loader";
 import { Permission } from "../domain/Permission";
 import onError from "../utils/onError";
+import { Box } from "@mui/system";
 
 export default function Permissions() {
   const [loading, setLoading] = useState(false);
@@ -43,14 +44,20 @@ export default function Permissions() {
     <Grid container spacing={3}>
       <Grid item xs={12}>
         <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-          <Typography
-            variant="h6"
-            component="h6"
-            marginBottom="12px"
-            marginLeft="6px"
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: "12px",
+              marginX: "6px",
+            }}
           >
-            Permissions
-          </Typography>
+            <Typography variant="h6" component="h6">
+              Permissions
+            </Typography>
+            <Button>Add Permission</Button>
+          </Box>
           <PermissionsTable permissions={permissions} />
         </Paper>
       </Grid>
