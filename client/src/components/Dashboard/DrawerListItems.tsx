@@ -1,6 +1,6 @@
-import * as React from "react";
 import { auth } from "../../api";
 import { useNavigate } from "react-router-dom";
+import { Fragment } from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -21,7 +21,7 @@ export default function DrawerListItems() {
   };
 
   return (
-    <React.Fragment>
+    <Fragment>
       <ListItemButton onClick={() => navigate("/employees")}>
         <ListItemIcon>
           <PeopleIcon />
@@ -41,6 +41,6 @@ export default function DrawerListItems() {
         </ListItemIcon>
         <ListItemText primary="Logout" />
       </ListItemButton>
-    </React.Fragment>
+    </Fragment>
   );
 }

@@ -17,12 +17,12 @@ export default function Employees() {
 
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<PaginatedResponse<User>>();
-  const [employees, setEmployees] = useState<Array<User>>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<User | null>(null);
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
   const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
   const [page, setPage] = useState(1);
   const [changePage, setChangePage] = useState(false);
+  const [triggerLoad, setTriggerLoad] = useState(false);
 
   const navigate = useNavigate();
 
@@ -41,7 +41,6 @@ export default function Employees() {
         const response = await loadEmployees();
 
         setResponse(response);
-        setEmployees(response.results);
         setPage(response.currentPage);
       } catch (error) {
         navigate("/login");
@@ -52,7 +51,7 @@ export default function Employees() {
     }
 
     load();
-  }, [changePage]);
+  }, [changePage, triggerLoad]);
 
   const onChangePage = (page: number) => {
     if (page === 0) page = 1;
@@ -68,9 +67,10 @@ export default function Employees() {
       if (!user) {
         onError("Failed to create user.");
       }
-
-      setEmployees([...employees, user]);
       toast.success("Employee Created Successfully!");
+
+      setTriggerLoad((t) => !t);
+
       setShowAddEmployeeModal(false);
     } catch (error) {
       onError(error);
@@ -85,8 +85,9 @@ export default function Employees() {
   const onDeleteEmployee = async (user: User) => {
     try {
       await users.deleteUser(user._id);
-      setEmployees(employees.filter((e) => e._id !== user._id));
       toast.success("Employee Deleted Successfully!");
+
+      setTriggerLoad((t) => !t);
     } catch (error) {
       onError(error);
     } finally {

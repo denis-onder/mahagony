@@ -24,3 +24,4 @@
 1. Implemented the `/assign/:id` page, to segregate modifying permissions to another page.
 2. Implemented paging for the `GET /users` endpoint.
 3. Added missing `Status` field in the Edit Employee modal.
+4. Implemented sorting to the `EmployeesTable` component.
