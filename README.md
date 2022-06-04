@@ -26,3 +26,8 @@
 3. Added missing `Status` field in the Edit Employee modal.
 4. Implemented sorting to the `EmployeesTable` component.
 5. Implemented filtering for the `GET /users` endpoint.
+6. Fixed the page counter bug.
+
+## Checkpoint
+Time: Saturday, June 4th, 2022 at 11:40 PM
+Commit Hash: `5b78cf7c1a31e6d1839de269f941afc4ad90feb2`
