@@ -4,6 +4,7 @@ import Employees from "./views/Employees";
 import Permissions from "./views/Permissions";
 import Login from "./views/Login";
 import Register from "./views/Register";
+import Employee from "./views/Employee";
 
 export default function () {
   return (
@@ -11,6 +12,7 @@ export default function () {
       <Routes>
         <Route path="/" element={<Dashboard />}>
           <Route path="/employees" element={<Employees />} />
+          <Route path="/employee/:id" element={<Employee />} />
           <Route path="/permissions" element={<Permissions />} />
         </Route>
         <Route path="/login" element={<Login />}></Route>

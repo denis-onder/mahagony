@@ -6,6 +6,7 @@ import TableRow from "@mui/material/TableRow";
 import { User } from "../../domain/User";
 import { Button } from "@mui/material";
 import { Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   employees: Array<User>;
@@ -16,6 +17,8 @@ export default function EmployeesTable({
   employees,
   onDeleteEmployeeClick,
 }: Props) {
+  const navigate = useNavigate();
+
   return (
     <Fragment>
       <Table size="small">
@@ -41,7 +44,11 @@ export default function EmployeesTable({
                 <Button size="small" color="success">
                   Assign
                 </Button>
-                <Button size="small" color="secondary">
+                <Button
+                  size="small"
+                  color="secondary"
+                  onClick={() => navigate(`/employee/${employee._id}`)}
+                >
                   Edit
                 </Button>
                 <Button
