@@ -37,35 +37,39 @@ export default function PermissionsTable({
             <TableRow>
               <TableCell>{permission.code}</TableCell>
               <TableCell>{permission.description}</TableCell>
-              <TableCell align="center">
-                {onDeletePermissionClick && (
-                  <Button
-                    size="small"
-                    color="error"
-                    onClick={() => onDeletePermissionClick(permission)}
-                  >
-                    Delete
-                  </Button>
-                )}
-                {onAssignPermissionClick && (
-                  <Button
-                    size="small"
-                    color="primary"
-                    onClick={() => onAssignPermissionClick(permission)}
-                  >
-                    Assign
-                  </Button>
-                )}
-                {onRevokePermissionClick && (
-                  <Button
-                    size="small"
-                    color="error"
-                    onClick={() => onRevokePermissionClick(permission)}
-                  >
-                    Revoke
-                  </Button>
-                )}
-              </TableCell>
+              {(onDeletePermissionClick ||
+                onAssignPermissionClick ||
+                onRevokePermissionClick) && (
+                <TableCell align="center">
+                  {onDeletePermissionClick && (
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={() => onDeletePermissionClick(permission)}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                  {onAssignPermissionClick && (
+                    <Button
+                      size="small"
+                      color="primary"
+                      onClick={() => onAssignPermissionClick(permission)}
+                    >
+                      Assign
+                    </Button>
+                  )}
+                  {onRevokePermissionClick && (
+                    <Button
+                      size="small"
+                      color="error"
+                      onClick={() => onRevokePermissionClick(permission)}
+                    >
+                      Revoke
+                    </Button>
+                  )}
+                </TableCell>
+              )}
             </TableRow>
           ))}
         </TableBody>
