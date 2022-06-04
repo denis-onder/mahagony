@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import Loader from "../components/Loader";
-import { User } from "../domain/User";
+import { User, UserPayload } from "../domain/User";
 import * as api from "../api";
 import { useNavigate, useParams } from "react-router-dom";
 import onError from "../utils/onError";
@@ -10,6 +10,7 @@ import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import toast from "react-hot-toast";
 import { Permission } from "../domain/Permission";
 import PermissionsTable from "../components/Permissions/PermissionsTable";
+import EditEmployeeModal from "../components/Employee/EditEmployeeModal";
 
 export default function Employee() {
   const { id } = useParams();
@@ -18,10 +19,11 @@ export default function Employee() {
 
   const [loading, setLoading] = useState(false);
   const [employee, setEmployee] = useState<User | null>(null);
+  const [showEditEmployeeModal, setShowEditEmployeeModal] = useState(false);
+  const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
   const [availablePermissions, setAvailablePermissions] = useState<
     Array<Permission>
   >([]);
-  const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
 
   function loadEmployee() {
     return api.users.findUserById(id as string);
@@ -71,6 +73,23 @@ export default function Employee() {
       onError(error);
     } finally {
       setShowDeleteEmployeeModal(false);
+    }
+  };
+
+  const onEditEmployee = async (payload: UserPayload) => {
+    if (!employee || !payload) return;
+
+    try {
+      await api.users.updateUser(employee._id, payload);
+
+      const updatedEmployee = await loadEmployee();
+
+      setEmployee(updatedEmployee);
+
+      toast.success("Employee Updated Successfully!");
+      setShowEditEmployeeModal(false);
+    } catch (error) {
+      onError(error);
     }
   };
 
@@ -150,6 +169,16 @@ export default function Employee() {
           )}
           <Grid item xs={12} sm={6}>
             <Button
+              style={{
+                marginRight: "10px",
+              }}
+              variant="contained"
+              color="success"
+              onClick={() => setShowEditEmployeeModal(true)}
+            >
+              Edit Employee
+            </Button>
+            <Button
               variant="contained"
               color="error"
               onClick={() => setShowDeleteEmployeeModal(true)}
@@ -165,6 +194,12 @@ export default function Employee() {
         onClose={() => setShowDeleteEmployeeModal(false)}
         onSubmit={onDeleteEmployee}
         target={DeleteEntityModalTarget.EMPLOYEE}
+      />
+      <EditEmployeeModal
+        open={showEditEmployeeModal}
+        employee={employee}
+        onClose={() => setShowEditEmployeeModal(false)}
+        onSubmit={onEditEmployee}
       />
     </Fragment>
   );

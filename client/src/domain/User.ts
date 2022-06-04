@@ -6,10 +6,10 @@ export interface UserPayload {
   username: string;
   password: string;
   email: string;
-  permissions: Array<Permission>;
 }
 
 export interface User extends UserPayload {
   _id: string;
   status: boolean;
+  permissions: Array<Permission>;
 }

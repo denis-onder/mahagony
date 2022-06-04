@@ -36,3 +36,15 @@ export const deleteUser = async (id: string): Promise<boolean> => {
     throw error;
   }
 };
+
+export const updateUser = async (
+  id: string,
+  payload: UserPayload
+): Promise<User> => {
+  try {
+    const response = await client.put(`/users/${id}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

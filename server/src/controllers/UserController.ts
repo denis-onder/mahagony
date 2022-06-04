@@ -60,8 +60,21 @@ export default class UserController implements BaseController<IUser> {
       return null;
     }
   }
-  update(req: AuthorizedRequest, res: Response): Promise<IUser | null> {
-    throw new Error("Method not implemented.");
+  async update(req: AuthorizedRequest, res: Response): Promise<IUser | null> {
+    try {
+      const updatedUser = await this.userService.update(
+        req.params.id,
+        req.body
+      );
+
+      res.status(200).json(updatedUser);
+
+      return updatedUser;
+    } catch (error) {
+      res.status(404).json({ error });
+
+      return null;
+    }
   }
   async delete(req: AuthorizedRequest, res: Response): Promise<boolean> {
     const deleted = await this.userService.delete(req.params.id);
