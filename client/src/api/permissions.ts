@@ -1,16 +1,14 @@
 import { Permission, PermissionPayload } from "../domain/Permission";
-import onError from "../utils/onError";
 import client from "./client";
 
 export const createPermission = async (
   payload: PermissionPayload
-): Promise<Permission | null> => {
+): Promise<Permission> => {
   try {
     const response = await client.post<Permission>("/permissions", payload);
     return response.data;
   } catch (error) {
-    onError(error);
-    return null;
+    throw error;
   }
 };
 
@@ -19,8 +17,7 @@ export const findPermissions = async (): Promise<Array<Permission>> => {
     const response = await client.get("/permissions");
     return response.data;
   } catch (error) {
-    onError(error);
-    return [];
+    throw error;
   }
 };
 
@@ -31,8 +28,7 @@ export const findPermissionById = async (
     const response = await client.get(`/permissions/${id}`);
     return response.data;
   } catch (error) {
-    onError(error);
-    return null;
+    throw error;
   }
 };
 
@@ -41,7 +37,6 @@ export const deletePermission = async (id: string): Promise<boolean> => {
     const response = await client.delete(`/permissions/${id}`);
     return response.data.deleted;
   } catch (error) {
-    onError(error);
-    return false;
+    throw error;
   }
 };

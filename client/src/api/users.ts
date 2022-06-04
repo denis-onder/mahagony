@@ -1,5 +1,4 @@
 import { User, UserPayload } from "../domain/User";
-import onError from "../utils/onError";
 import client from "./client";
 
 export const createUser = async (payload: UserPayload): Promise<User> => {

@@ -56,6 +56,16 @@ export default function Employees() {
     }
   };
 
+  const onDeleteEmployee = async (user: User) => {
+    try {
+      await users.deleteUser(user._id);
+      setEmployees(employees.filter((e) => e._id !== user._id));
+      toast.success("Employee Deleted Successfully!");
+    } catch (error) {
+      onError(error);
+    }
+  };
+
   if (loading) {
     return <Loader />;
   }

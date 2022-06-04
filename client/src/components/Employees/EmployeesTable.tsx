@@ -37,6 +37,9 @@ export default function EmployeesTable({ employees }: Props) {
                 <Button size="small" color="success">
                   Assign
                 </Button>
+                <Button size="small" color="secondary">
+                  Edit
+                </Button>
                 <Button size="small" color="error">
                   Delete
                 </Button>

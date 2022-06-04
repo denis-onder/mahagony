@@ -1,5 +1,4 @@
 import { UserPayload } from "../domain/User";
-import onError from "../utils/onError";
 import client from "./client";
 
 export const login = async (identifier: string, password: string) => {
@@ -7,7 +6,7 @@ export const login = async (identifier: string, password: string) => {
     const response = await client.post("/auth/login", { identifier, password });
     return response.data;
   } catch (error) {
-    onError(error);
+    throw error;
   }
 };
 
@@ -16,7 +15,7 @@ export const register = async (payload: UserPayload) => {
     const response = await client.post("/auth/register", payload);
     return response.data;
   } catch (error) {
-    onError(error);
+    throw error;
   }
 };
 
@@ -25,7 +24,7 @@ export const logOut = async () => {
     const response = await client.post("/auth/logout");
     return response.data;
   } catch (error) {
-    onError(error);
+    throw error;
   }
 };
 
@@ -34,6 +33,6 @@ export const validate = async () => {
     const response = await client.get("/auth/validate");
     return response.data;
   } catch (error) {
-    onError(error);
+    throw error;
   }
 };

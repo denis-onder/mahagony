@@ -1,24 +1,7 @@
 import { Button, Grid, Modal, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { UserPayload } from "../../domain/User";
-
-interface Props {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: (payload: UserPayload) => void;
-}
-
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+import { Props, style } from "../../utils/modalUtils";
 
 export default function AddEmployeeModal({ open, onClose, onSubmit }: Props) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
