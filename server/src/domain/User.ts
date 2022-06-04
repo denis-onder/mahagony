@@ -8,7 +8,7 @@ export interface IUser {
   password: string;
   email: string;
   status: boolean;
-  permissions: Array<string>;
+  permissions: Array<Schema.Types.ObjectId>;
 }
 
 const UserSchema = new Schema<IUser>({

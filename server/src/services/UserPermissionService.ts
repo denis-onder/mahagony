@@ -14,7 +14,7 @@ export default class UserPermissionService {
       throw new Error("User or permission not found.");
     }
 
-    user.permissions.push(permission._id as unknown as string);
+    user.permissions.push(permission._id);
 
     await user.save();
 
@@ -33,7 +33,7 @@ export default class UserPermissionService {
     }
 
     user.permissions = user.permissions.filter(
-      (id: string) => id !== permissionId
+      (p) => `${p}` !== `${permission._id}`
     );
 
     await user.save();
