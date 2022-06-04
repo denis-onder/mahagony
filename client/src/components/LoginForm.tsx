@@ -9,9 +9,10 @@ import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+import { LoginPayload } from "../domain/Auth";
 
 interface Props {
-  onLoginButtonClick: (data: { identifier: string; password: string }) => void;
+  onLoginButtonClick: (data: LoginPayload) => void;
 }
 
 const theme = createTheme();
