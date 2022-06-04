@@ -2,11 +2,20 @@
 
 > A simple user management application written using React, Node.js, Express, TypeScript, Vite and MongoDB.
 
-## Configuration
+## Base URLs
+  * Client: `http://localhost:3000`
+  * Server: `http://localhost:9000`
 
+## Installation & Configuration
   1. Run `npm install` in both the `/server` and `/client` directories to install all of the necessary dependencies.
-  2. Run `npm run dev` in the `/server` folder to start the Node.js back-end.
-  3. Run `npm start` in the `/client` folder to start the React application.
+  2. Duplicate the `.env.example` file in both the `/server` and `/client` directories.
+  3. In `/server/.env`, set the `MONGO_DB_URI` variable to your MongoDB connection URI.
+  4. In `/client/.env`, set the `REACT_APP_BACKEND_URL` variable to the base URL of your back-end.
+
+## Starting The Application
+  1. Boot up the back-end by running `npm run dev` in the `/server` directory.
+  2. Boot up the front-end by running `npm run dev in the `/clie  nt` directory.
 
 ## Links
   * [Postman Workspace](https://app.getpostman.com/join-team?invite_code=cf4119ffe86d03e5204a93f366b1bfbc&target_code=6102eda28e4202480bebb34b27ed30db)
+  * Live Application [TBD]
