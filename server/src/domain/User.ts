@@ -8,6 +8,7 @@ export interface IUser {
   password: string;
   email: string;
   status: boolean;
+  permissions: Array<string>;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -37,6 +38,12 @@ const UserSchema = new Schema<IUser>({
     type: Boolean,
     default: true,
   },
+  permissions: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Permission",
+    },
+  ],
 });
 
 export const UserModel = model<IUser>("User", UserSchema);

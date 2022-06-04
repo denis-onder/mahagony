@@ -9,12 +9,16 @@ import { Fragment } from "react";
 
 interface Props {
   permissions: Array<Permission>;
-  onDeletePermissionClick: (permission: Permission) => void;
+  onDeletePermissionClick?: (permission: Permission) => void;
+  onAssignPermissionClick?: (permission: Permission) => void;
+  onRevokePermissionClick?: (permission: Permission) => void;
 }
 
 export default function PermissionsTable({
   permissions,
   onDeletePermissionClick,
+  onAssignPermissionClick,
+  onRevokePermissionClick,
 }: Props) {
   return (
     <Fragment>
@@ -28,17 +32,37 @@ export default function PermissionsTable({
         </TableHead>
         <TableBody>
           {permissions.map((permission) => (
-            <TableRow key={permission._id}>
+            <TableRow>
               <TableCell>{permission.code}</TableCell>
               <TableCell>{permission.description}</TableCell>
               <TableCell align="center">
-                <Button
-                  size="small"
-                  color="error"
-                  onClick={() => onDeletePermissionClick(permission)}
-                >
-                  Delete
-                </Button>
+                {onDeletePermissionClick && (
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => onDeletePermissionClick(permission)}
+                  >
+                    Delete
+                  </Button>
+                )}
+                {onAssignPermissionClick && (
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => onAssignPermissionClick(permission)}
+                  >
+                    Assign
+                  </Button>
+                )}
+                {onRevokePermissionClick && (
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => onRevokePermissionClick(permission)}
+                  >
+                    Revoke
+                  </Button>
+                )}
               </TableCell>
             </TableRow>
           ))}

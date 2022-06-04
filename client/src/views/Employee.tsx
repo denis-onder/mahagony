@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import Loader from "../components/Loader";
 import { User } from "../domain/User";
 import * as api from "../api";
@@ -8,6 +8,8 @@ import { Button, Grid, Paper, Typography } from "@mui/material";
 import DeleteEntityModal from "../components/DeleteEntityModal";
 import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import toast from "react-hot-toast";
+import { Permission } from "../domain/Permission";
+import PermissionsTable from "../components/Permissions/PermissionsTable";
 
 export default function Employee() {
   const { id } = useParams();
@@ -16,11 +18,18 @@ export default function Employee() {
 
   const [loading, setLoading] = useState(false);
   const [employee, setEmployee] = useState<User | null>(null);
+  const [availablePermissions, setAvailablePermissions] = useState<
+    Array<Permission>
+  >([]);
   const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
 
+  function loadEmployee() {
+    return api.users.findUserById(id as string);
+  }
+
   useEffect(() => {
-    function loadEmployee() {
-      return api.users.findUserById(id as string);
+    function loadAvailablePermissions() {
+      return api.permissions.findPermissions();
     }
 
     async function load() {
@@ -28,8 +37,10 @@ export default function Employee() {
         setLoading(true);
 
         const employee = await loadEmployee();
+        const availablePermissions = await loadAvailablePermissions();
 
         setEmployee(employee);
+        setAvailablePermissions(availablePermissions);
       } catch (error) {
         onError(error);
       } finally {
@@ -39,6 +50,15 @@ export default function Employee() {
 
     load();
   }, []);
+
+  const filteredPermissions = useMemo(() => {
+    return availablePermissions.filter(
+      (permission) =>
+        (employee as User).permissions
+          .map((p) => p._id)
+          .indexOf(permission._id) === -1
+    );
+  }, [employee]);
 
   const onDeleteEmployee = async () => {
     if (!employee) return;
@@ -51,6 +71,30 @@ export default function Employee() {
       onError(error);
     } finally {
       setShowDeleteEmployeeModal(false);
+    }
+  };
+
+  const onAssignPermissionButtonClick = async (permission: Permission) => {
+    if (!employee || !permission) return;
+
+    try {
+      await api.userPermissions.assignPermission(employee._id, permission._id);
+      setEmployee(await loadEmployee());
+      toast.success("Permission Assigned Successfully!");
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const onRevokePermissionButtonClick = async (permission: Permission) => {
+    if (!employee || !permission) return;
+
+    try {
+      await api.userPermissions.revokePermission(employee._id, permission._id);
+      setEmployee(await loadEmployee());
+      toast.success("Permission Revoked Successfully!");
+    } catch (error) {
+      onError(error);
     }
   };
 
@@ -76,6 +120,34 @@ export default function Employee() {
           <Grid item xs={12}>
             <span>Status: {employee.status ? "Active" : "Inactive"}</span>
           </Grid>
+          {/* Assigned Permissions */}
+          {employee.permissions.length > 0 && (
+            <Fragment>
+              <Grid item xs={12}>
+                <Typography variant="h6">Assigned Permissions</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <PermissionsTable
+                  permissions={employee.permissions}
+                  onRevokePermissionClick={onRevokePermissionButtonClick}
+                />
+              </Grid>
+            </Fragment>
+          )}
+          {/* Available Permissions */}
+          {filteredPermissions.length > 0 && (
+            <Fragment>
+              <Grid item xs={12}>
+                <Typography variant="h6">Available Permissions</Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <PermissionsTable
+                  permissions={filteredPermissions}
+                  onAssignPermissionClick={onAssignPermissionButtonClick}
+                />
+              </Grid>
+            </Fragment>
+          )}
           <Grid item xs={12} sm={6}>
             <Button
               variant="contained"

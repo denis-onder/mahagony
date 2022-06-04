@@ -26,14 +26,16 @@ export default class UserService implements BaseService<IUser> {
     return await user.save();
   }
   async find(query: object): Promise<Array<IUser>> {
-    return await UserModel.find(query);
+    return await UserModel.find(query).select("-password");
   }
   async findById(id: string): Promise<IUser | null> {
     if (!id) {
       return Promise.resolve(null);
     }
 
-    return await UserModel.findById(id);
+    return await UserModel.findById(id)
+      .populate("permissions")
+      .select("-password");
   }
   update(id: string, payload: Partial<IUser>): Promise<IUser | null> {
     throw new Error("Method not implemented.");

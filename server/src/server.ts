@@ -10,6 +10,8 @@ import authMiddleware from "./middleware/auth";
 import PermissionService from "./services/PermissionService";
 import PermissionController from "./controllers/PermissionController";
 import cookieParser from "cookie-parser";
+import UserPermissionService from "./services/UserPermissionService";
+import UserPermissionController from "./controllers/UserPermissionController";
 
 class ExpressApplication {
   public app: express.Application;
@@ -23,7 +25,7 @@ class ExpressApplication {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
 
-    const whitelist = ["http://localhost:3000"];
+    const whitelist = ["http://localhost:3000", "*"];
     const corsOptions = {
       credentials: true, // This is important.
       origin: (origin: any, callback: any) => {
@@ -39,14 +41,23 @@ class ExpressApplication {
   private configureRoutes(): void {
     const userService = new UserService();
     const permissionService = new PermissionService();
+    const userPermissionService = new UserPermissionService();
 
     const authController = new AuthenticationController(userService);
     const userController = new UserController(userService);
     const permissionController = new PermissionController(permissionService);
+    const userPermissionController = new UserPermissionController(
+      userPermissionService
+    );
 
     this.app.use("/auth", authController.router);
     this.app.use("/users", authMiddleware, userController.router);
     this.app.use("/permissions", authMiddleware, permissionController.router);
+    this.app.use(
+      "/user-permissions",
+      authMiddleware,
+      userPermissionController.router
+    );
   }
 
   public async start(): Promise<void> {
