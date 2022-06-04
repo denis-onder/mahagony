@@ -19,3 +19,12 @@ export const register = async (payload: UserPayload) => {
     onError(error);
   }
 };
+
+export const logOut = async () => {
+  try {
+    const response = await client.post("/auth/logout");
+    return response.data;
+  } catch (error) {
+    onError(error);
+  }
+};

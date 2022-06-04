@@ -13,10 +13,7 @@ import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import {
-  mainListItems,
-  secondaryListItems,
-} from "../components/Dashboard/DrawerListItems";
+import DrawerListItems from "../components/Dashboard/DrawerListItems";
 import Employees from "../components/Dashboard/Employees";
 import Permissions from "../components/Dashboard/Permissions";
 import { useEffect, useState } from "react";
@@ -25,6 +22,7 @@ import onError from "../utils/onError";
 import { User } from "../domain/User";
 import { Permission } from "../domain/Permission";
 import Loader from "../components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth: number = 240;
 
@@ -84,6 +82,8 @@ function DashboardContent() {
   const [employees, setEmployees] = useState<Array<User>>([]);
   const [permissions, setPermissions] = useState<Array<Permission>>([]);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     function loadEmployees() {
       return api.users.findUsers();
@@ -103,7 +103,8 @@ function DashboardContent() {
         setEmployees(employees);
         setPermissions(permissions);
       } catch (error) {
-        onError(error);
+        navigate("/login");
+        onError("Please Login Again.");
       } finally {
         setLoading(false);
       }
@@ -168,9 +169,7 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-            {secondaryListItems}
+            <DrawerListItems />
           </List>
         </Drawer>
         <Box

@@ -21,6 +21,9 @@ export default class AuthenticationController {
     this.router.post("/register", (req, res) => this.register(req, res));
     this.router.post("/login", (req, res) => this.login(req, res));
     this.router.get("/me", authMiddleware, (req, res) => this.getMe(req, res));
+    this.router.post("/logout", authMiddleware, (req, res) =>
+      this.logOut(req, res)
+    );
   }
 
   register(req: Request, res: Response): void {
@@ -90,6 +93,17 @@ export default class AuthenticationController {
       );
 
       res.status(200).json(user);
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  }
+
+  async logOut(req: AuthorizedRequest, res: Response): Promise<void> {
+    try {
+      res
+        .status(200)
+        .cookie("token", "", { expires: new Date(0) })
+        .send("Logged out");
     } catch (error) {
       res.status(400).json({ error });
     }
