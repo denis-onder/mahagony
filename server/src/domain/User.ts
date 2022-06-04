@@ -1,5 +1,10 @@
 import { model, Schema } from "mongoose";
 
+export interface UserPaginationParams {
+  page: number;
+  limit: number;
+}
+
 export interface IUser {
   _id: Schema.Types.ObjectId;
   firstName: string;

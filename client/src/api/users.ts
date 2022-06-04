@@ -1,4 +1,5 @@
-import { User, UserPayload } from "../domain/User";
+import { PaginatedResponse } from "../domain/PaginatedResponse";
+import { User, UserPayload, UserPaginationParams } from "../domain/User";
 import client from "./client";
 
 export const createUser = async (payload: UserPayload): Promise<User> => {
@@ -10,9 +11,13 @@ export const createUser = async (payload: UserPayload): Promise<User> => {
   }
 };
 
-export const findUsers = async (): Promise<Array<User>> => {
+export const findUsers = async (
+  params: UserPaginationParams
+): Promise<PaginatedResponse<User>> => {
   try {
-    const response = await client.get("/users");
+    const response = await client.get("/users", {
+      params,
+    });
     return response.data;
   } catch (error) {
     throw error;

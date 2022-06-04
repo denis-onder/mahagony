@@ -1,3 +1,4 @@
+import { UserPaginationParams } from "./../domain/User";
 import argon2 from "argon2";
 import userValidator from "../validators/userValidator";
 import { IUser, UserModel } from "../domain/User";
@@ -25,8 +26,12 @@ export default class UserService implements BaseService<IUser> {
     const user = new UserModel(payload);
     return await user.save();
   }
-  async find(query: object): Promise<Array<IUser>> {
-    return await UserModel.find(query).select("-password");
+  async find(params: UserPaginationParams): Promise<Array<IUser>> {
+    return await UserModel.find()
+      .limit(params.limit * 1)
+      .skip((params.page - 1) * params.limit)
+      .select("-password")
+      .exec();
   }
   async findById(id: string): Promise<IUser | null> {
     if (!id) {

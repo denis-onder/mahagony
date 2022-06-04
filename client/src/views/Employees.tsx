@@ -12,17 +12,23 @@ import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import onError from "../utils/onError";
 
 export default function Employees() {
+  const LIMIT = 10;
+
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState<Array<User>>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<User | null>(null);
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
   const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
+  const [page, setPage] = useState(1);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     function loadEmployees() {
-      return users.findUsers();
+      return users.findUsers({
+        limit: LIMIT,
+        page: page,
+      });
     }
 
     async function load() {
@@ -31,7 +37,7 @@ export default function Employees() {
 
         const employees = await loadEmployees();
 
-        setEmployees(employees);
+        setEmployees(employees.results);
       } catch (error) {
         navigate("/login");
         onError("Please Login Again.");

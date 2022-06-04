@@ -1,3 +1,4 @@
+import { UserModel } from "./../domain/User";
 import validator from "validator";
 import argon2 from "argon2";
 import { Request, Response, Router } from "express";
@@ -59,7 +60,7 @@ export default class AuthenticationController {
       query = { username: credentials.identifier };
     }
 
-    const [user] = await this.userService.find(query);
+    const user = await UserModel.findOne(query);
 
     if (!user) {
       res.status(404).send("User not found.");

@@ -1,3 +1,5 @@
+import { PaginatedResponse } from "./../domain/PaginatedResponse";
+import { UserModel, UserPaginationParams } from "./../domain/User";
 import { AuthorizedRequest } from "../domain/AuthorizedRequest";
 import { IUser } from "../domain/User";
 import BaseController from "../domain/BaseController";
@@ -30,17 +32,38 @@ export default class UserController implements BaseController<IUser> {
       return null;
     }
   }
-  async find(req: AuthorizedRequest, res: Response): Promise<IUser[]> {
+  async find(
+    req: AuthorizedRequest,
+    res: Response
+  ): Promise<PaginatedResponse<IUser>> {
     try {
-      const users = await this.userService.find(req.query);
+      const params: UserPaginationParams = {
+        limit: req.query.limit ? parseInt(req.query.limit as string) : 10,
+        page: req.query.page ? parseInt(req.query.page as string) : 1,
+      };
 
-      res.status(200).json(users);
+      const results = await this.userService.find(params);
+      const count = await UserModel.countDocuments();
 
-      return users;
+      const response = {
+        count,
+        results,
+        totalPages: Math.ceil(count / params.limit),
+        currentPage: params.page,
+      };
+
+      res.status(200).json(response);
+
+      return response;
     } catch (error) {
       res.status(404).json({ error });
 
-      return [];
+      return {
+        count: 0,
+        results: [],
+        totalPages: 0,
+        currentPage: 0,
+      };
     }
   }
   async findById(req: AuthorizedRequest, res: Response): Promise<IUser | null> {

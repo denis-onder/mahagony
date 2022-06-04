@@ -8,6 +8,11 @@ export interface UserPayload {
   email: string;
 }
 
+export interface UserPaginationParams {
+  page: number;
+  limit: number;
+}
+
 export interface User extends UserPayload {
   _id: string;
   status: boolean;
