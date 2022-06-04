@@ -1,3 +1,8 @@
+export enum DeleteEntityModalTarget {
+  EMPLOYEE = "employee",
+  PERMISSION = "permission",
+}
+
 export interface Props {
   open: boolean;
   onClose: () => void;

@@ -9,9 +9,13 @@ import { Fragment } from "react";
 
 interface Props {
   permissions: Array<Permission>;
+  onDeletePermissionClick: (permission: Permission) => void;
 }
 
-export default function PermissionsTable({ permissions }: Props) {
+export default function PermissionsTable({
+  permissions,
+  onDeletePermissionClick,
+}: Props) {
   return (
     <Fragment>
       <Table size="small">
@@ -28,7 +32,11 @@ export default function PermissionsTable({ permissions }: Props) {
               <TableCell>{permission.code}</TableCell>
               <TableCell>{permission.description}</TableCell>
               <TableCell align="center">
-                <Button size="small" color="error">
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={() => onDeletePermissionClick(permission)}
+                >
                   Delete
                 </Button>
               </TableCell>

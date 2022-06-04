@@ -9,11 +9,17 @@ import onError from "../utils/onError";
 import { Box } from "@mui/system";
 import AddPermissionModal from "../components/Permissions/AddPermissionModal";
 import toast from "react-hot-toast";
+import { DeleteEntityModalTarget } from "../utils/modalUtils";
+import DeleteEntityModal from "../components/DeleteEntityModal";
 
 export default function Permissions() {
   const [loading, setLoading] = useState(false);
   const [permissions, setPermissions] = useState<Array<Permission>>([]);
+  const [selectedPermission, setSelectedPermission] =
+    useState<Permission | null>(null);
   const [showAddPermissionModal, setShowAddPermissionModal] = useState(false);
+  const [showDeletePermissionModal, setShowDeletePermissionModal] =
+    useState(false);
 
   const navigate = useNavigate();
 
@@ -57,6 +63,23 @@ export default function Permissions() {
     }
   };
 
+  const handleOnDeleteEmployeeClick = (permission: Permission) => {
+    setSelectedPermission(permission);
+    setShowDeletePermissionModal(true);
+  };
+
+  const onDeletePermission = async (permission: Permission) => {
+    try {
+      await api.permissions.deletePermission(permission._id);
+      setPermissions(permissions.filter((p) => p._id !== permission._id));
+      toast.success("Permission Deleted Successfully!");
+    } catch (error) {
+      onError(error);
+    } finally {
+      setShowDeletePermissionModal(false);
+    }
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -82,7 +105,10 @@ export default function Permissions() {
                 Add Permission
               </Button>
             </Box>
-            <PermissionsTable permissions={permissions} />
+            <PermissionsTable
+              permissions={permissions}
+              onDeletePermissionClick={handleOnDeleteEmployeeClick}
+            />
           </Paper>
         </Grid>
       </Grid>
@@ -91,6 +117,15 @@ export default function Permissions() {
         onClose={() => setShowAddPermissionModal(false)}
         onSubmit={onAddPermissionSubmit}
       />
+      {selectedPermission && (
+        <DeleteEntityModal
+          open={showDeletePermissionModal}
+          entity={selectedPermission}
+          onClose={() => setShowDeletePermissionModal(false)}
+          onSubmit={onDeletePermission}
+          target={DeleteEntityModalTarget.PERMISSION}
+        />
+      )}
     </Fragment>
   );
 }

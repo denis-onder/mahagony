@@ -3,16 +3,20 @@ import { Fragment, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { users } from "../api";
+import DeleteEntityModal from "../components/DeleteEntityModal";
 import AddEmployeeModal from "../components/Employees/AddEmployeeModal";
 import EmployeesTable from "../components/Employees/EmployeesTable";
 import Loader from "../components/Loader";
 import { User, UserPayload } from "../domain/User";
+import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import onError from "../utils/onError";
 
 export default function Employees() {
   const [loading, setLoading] = useState(false);
   const [employees, setEmployees] = useState<Array<User>>([]);
+  const [selectedEmployee, setSelectedEmployee] = useState<User | null>(null);
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
+  const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
 
   const navigate = useNavigate();
 
@@ -49,11 +53,15 @@ export default function Employees() {
 
       setEmployees([...employees, user]);
       toast.success("Employee Created Successfully!");
+      setShowAddEmployeeModal(false);
     } catch (error) {
       onError(error);
-    } finally {
-      setShowAddEmployeeModal(false);
     }
+  };
+
+  const handleOnDeleteEmployeeClick = (employee: User) => {
+    setSelectedEmployee(employee);
+    setShowDeleteEmployeeModal(true);
   };
 
   const onDeleteEmployee = async (user: User) => {
@@ -63,6 +71,8 @@ export default function Employees() {
       toast.success("Employee Deleted Successfully!");
     } catch (error) {
       onError(error);
+    } finally {
+      setShowDeleteEmployeeModal(false);
     }
   };
 
@@ -91,7 +101,10 @@ export default function Employees() {
                 Add Employee
               </Button>
             </Box>
-            <EmployeesTable employees={employees} />
+            <EmployeesTable
+              employees={employees}
+              onDeleteEmployeeClick={handleOnDeleteEmployeeClick}
+            />
           </Paper>
         </Grid>
       </Grid>
@@ -100,6 +113,15 @@ export default function Employees() {
         onClose={() => setShowAddEmployeeModal(false)}
         onSubmit={onAddEmployeeSubmit}
       />
+      {selectedEmployee && (
+        <DeleteEntityModal
+          open={showDeleteEmployeeModal}
+          entity={selectedEmployee}
+          onClose={() => setShowDeleteEmployeeModal(false)}
+          onSubmit={onDeleteEmployee}
+          target={DeleteEntityModalTarget.EMPLOYEE}
+        />
+      )}
     </Fragment>
   );
 }

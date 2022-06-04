@@ -9,9 +9,13 @@ import { Fragment } from "react";
 
 interface Props {
   employees: Array<User>;
+  onDeleteEmployeeClick: (employee: User) => void;
 }
 
-export default function EmployeesTable({ employees }: Props) {
+export default function EmployeesTable({
+  employees,
+  onDeleteEmployeeClick,
+}: Props) {
   return (
     <Fragment>
       <Table size="small">
@@ -40,7 +44,11 @@ export default function EmployeesTable({ employees }: Props) {
                 <Button size="small" color="secondary">
                   Edit
                 </Button>
-                <Button size="small" color="error">
+                <Button
+                  size="small"
+                  color="error"
+                  onClick={() => onDeleteEmployeeClick(employee)}
+                >
                   Delete
                 </Button>
               </TableCell>
