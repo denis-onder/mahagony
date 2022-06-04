@@ -81,6 +81,7 @@ export default function EmployeesTable({
           <TableFooter>
             <TableRow>
               <TablePagination
+                rowsPerPageOptions={[limit]}
                 colSpan={3}
                 count={paginatedEmployeesResponse.count}
                 rowsPerPage={limit}
