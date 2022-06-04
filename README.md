@@ -19,3 +19,8 @@
 ## Links
   * [Postman Workspace](https://app.getpostman.com/join-team?invite_code=cf4119ffe86d03e5204a93f366b1bfbc&target_code=6102eda28e4202480bebb34b27ed30db)
   * Live Application [TBD]
+
+## Implemented Since Submission
+1. Implemented the `/assign/:id` page, to segregate modifying permissions to another page.
+2. Implemented paging for the `GET /users` endpoint.
+3. Added missing `Status` field in the Edit Employee modal.

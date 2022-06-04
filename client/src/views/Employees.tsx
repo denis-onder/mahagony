@@ -113,7 +113,7 @@ export default function Employees() {
               }}
             >
               <Typography variant="h6" component="h6">
-                Employees
+                Employees: Page {page}
               </Typography>
               <Button onClick={() => setShowAddEmployeeModal(true)}>
                 Add Employee

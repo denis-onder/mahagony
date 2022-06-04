@@ -6,6 +6,7 @@ export interface UserPayload {
   username: string;
   password: string;
   email: string;
+  status: boolean;
 }
 
 export interface UserPaginationParams {
@@ -15,6 +16,5 @@ export interface UserPaginationParams {
 
 export interface User extends UserPayload {
   _id: string;
-  status: boolean;
   permissions: Array<Permission>;
 }

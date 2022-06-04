@@ -4,7 +4,12 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { User } from "../../domain/User";
-import { Button, TableFooter, TablePagination } from "@mui/material";
+import {
+  Button,
+  TableFooter,
+  TablePagination,
+  Typography,
+} from "@mui/material";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { PaginatedResponse } from "../../domain/PaginatedResponse";

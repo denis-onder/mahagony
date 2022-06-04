@@ -1,5 +1,14 @@
-import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  MenuItem,
+  Modal,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useState } from "react";
 import { User, UserPayload } from "../../domain/User";
 import { Props, style } from "../../utils/modalUtils";
 
@@ -22,14 +31,14 @@ export default function EditEmployeeModal({
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
 
     const payload: UserPayload = {
-      firstName: formData.get("firstName") as string,
-      lastName: formData.get("lastName") as string,
-      email: formData.get("email") as string,
-      username: formData.get("username") as string,
-      password: formData.get("password") as string,
+      firstName,
+      lastName,
+      email,
+      username,
+      password,
+      status,
     };
 
     onSubmit(payload);
@@ -118,6 +127,21 @@ export default function EditEmployeeModal({
               value={password}
               onChange={(event) => setPassword(event.target.value)}
             />
+          </Grid>
+          <Grid item xs={12}>
+            <Select
+              labelId="simple-select-label"
+              id="simple-select"
+              value={`${status}`}
+              label="Status"
+              placeholder="Status"
+              onChange={(e) =>
+                setStatus(e.target.value === "true" ? true : false)
+              }
+            >
+              <MenuItem value={"true"}>Active</MenuItem>
+              <MenuItem value={"false"}>Inactive</MenuItem>
+            </Select>
           </Grid>
         </Grid>
         <Button
