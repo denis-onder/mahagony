@@ -4,20 +4,33 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { User } from "../../domain/User";
-import { Button } from "@mui/material";
+import { Button, TableFooter, TablePagination } from "@mui/material";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
+import { PaginatedResponse } from "../../domain/PaginatedResponse";
+import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 
 interface Props {
-  employees: Array<User>;
+  paginatedEmployeesResponse: PaginatedResponse<User>;
   onDeleteEmployeeClick: (employee: User) => void;
+  onPageChange: (page: number) => void;
+  limit: number;
 }
 
 export default function EmployeesTable({
-  employees,
+  paginatedEmployeesResponse,
   onDeleteEmployeeClick,
+  onPageChange,
+  limit,
 }: Props) {
   const navigate = useNavigate();
+
+  const handleChangePage = (
+    _: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number
+  ) => {
+    onPageChange(newPage);
+  };
 
   return (
     <Fragment>
@@ -32,7 +45,7 @@ export default function EmployeesTable({
           </TableRow>
         </TableHead>
         <TableBody>
-          {employees.map((employee) => (
+          {paginatedEmployeesResponse.results.map((employee) => (
             <TableRow key={employee._id}>
               <TableCell>
                 {employee.firstName} {employee.lastName}
@@ -41,7 +54,11 @@ export default function EmployeesTable({
               <TableCell>{employee.email}</TableCell>
               <TableCell>{employee.status ? "Active" : "Inactive"}</TableCell>
               <TableCell align="center">
-                <Button size="small" color="success">
+                <Button
+                  size="small"
+                  color="success"
+                  onClick={() => navigate(`/assign/${employee._id}`)}
+                >
                   Assign
                 </Button>
                 <Button
@@ -61,6 +78,24 @@ export default function EmployeesTable({
               </TableCell>
             </TableRow>
           ))}
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                colSpan={3}
+                count={paginatedEmployeesResponse.count}
+                rowsPerPage={limit}
+                page={paginatedEmployeesResponse.currentPage}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
         </TableBody>
       </Table>
     </Fragment>

@@ -7,6 +7,7 @@ import DeleteEntityModal from "../components/DeleteEntityModal";
 import AddEmployeeModal from "../components/Employees/AddEmployeeModal";
 import EmployeesTable from "../components/Employees/EmployeesTable";
 import Loader from "../components/Loader";
+import { PaginatedResponse } from "../domain/PaginatedResponse";
 import { User, UserPayload } from "../domain/User";
 import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import onError from "../utils/onError";
@@ -15,11 +16,13 @@ export default function Employees() {
   const LIMIT = 10;
 
   const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState<PaginatedResponse<User>>();
   const [employees, setEmployees] = useState<Array<User>>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<User | null>(null);
   const [showAddEmployeeModal, setShowAddEmployeeModal] = useState(false);
   const [showDeleteEmployeeModal, setShowDeleteEmployeeModal] = useState(false);
   const [page, setPage] = useState(1);
+  const [changePage, setChangePage] = useState(false);
 
   const navigate = useNavigate();
 
@@ -35,9 +38,11 @@ export default function Employees() {
       try {
         setLoading(true);
 
-        const employees = await loadEmployees();
+        const response = await loadEmployees();
 
-        setEmployees(employees.results);
+        setResponse(response);
+        setEmployees(response.results);
+        setPage(response.currentPage);
       } catch (error) {
         navigate("/login");
         onError("Please Login Again.");
@@ -47,7 +52,14 @@ export default function Employees() {
     }
 
     load();
-  }, []);
+  }, [changePage]);
+
+  const onChangePage = (page: number) => {
+    if (page === 0) page = 1;
+
+    setPage(page);
+    setChangePage((p) => !p);
+  };
 
   const onAddEmployeeSubmit = async (payload: UserPayload) => {
     try {
@@ -82,7 +94,7 @@ export default function Employees() {
     }
   };
 
-  if (loading) {
+  if (loading || !response) {
     return <Loader />;
   }
 
@@ -108,8 +120,10 @@ export default function Employees() {
               </Button>
             </Box>
             <EmployeesTable
-              employees={employees}
+              paginatedEmployeesResponse={response as PaginatedResponse<User>}
               onDeleteEmployeeClick={handleOnDeleteEmployeeClick}
+              onPageChange={onChangePage}
+              limit={LIMIT}
             />
           </Paper>
         </Grid>
