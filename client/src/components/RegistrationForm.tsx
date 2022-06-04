@@ -1,4 +1,6 @@
-import * as React from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { UserPayload } from "../domain/User";
+import { Link } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -8,9 +10,6 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { UserPayload } from "../domain/User";
-import { Link } from "react-router-dom";
 
 interface Props {
   onRegisterButtonClick: (data: UserPayload) => void;
@@ -29,6 +28,7 @@ export default function RegistrationForm({ onRegisterButtonClick }: Props) {
       email: formData.get("email") as string,
       username: formData.get("username") as string,
       password: formData.get("password") as string,
+      status: true,
     };
 
     onRegisterButtonClick(payload);

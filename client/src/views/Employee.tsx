@@ -1,14 +1,14 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
-import Loader from "../components/Loader";
-import { User, UserPayload } from "../domain/User";
 import * as api from "../api";
+import { Fragment, useEffect, useState } from "react";
+import { User, UserPayload } from "../domain/User";
 import { useNavigate, useParams } from "react-router-dom";
-import onError from "../utils/onError";
 import { Button, Grid, Paper, Typography } from "@mui/material";
-import DeleteEntityModal from "../components/DeleteEntityModal";
 import { DeleteEntityModalTarget } from "../utils/modalUtils";
-import toast from "react-hot-toast";
 import { Permission } from "../domain/Permission";
+import Loader from "../components/Loader";
+import onError from "../utils/onError";
+import DeleteEntityModal from "../components/DeleteEntityModal";
+import toast from "react-hot-toast";
 import PermissionsTable from "../components/Permissions/PermissionsTable";
 import EditEmployeeModal from "../components/Employee/EditEmployeeModal";
 

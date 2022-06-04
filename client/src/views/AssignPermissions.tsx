@@ -3,10 +3,10 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Permission } from "../domain/Permission";
 import { User } from "../domain/User";
-import onError from "../utils/onError";
-import Loader from "../components/Loader";
 import { Grid, Paper, Typography } from "@mui/material";
 import PermissionsTable from "../components/Permissions/PermissionsTable";
+import onError from "../utils/onError";
+import Loader from "../components/Loader";
 import toast from "react-hot-toast";
 
 export default function AssignPermissions() {

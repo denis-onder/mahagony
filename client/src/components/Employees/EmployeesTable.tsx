@@ -1,19 +1,18 @@
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import { User } from "../../domain/User";
-import {
-  Button,
-  TableFooter,
-  TablePagination,
-  Typography,
-} from "@mui/material";
 import { Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { PaginatedResponse } from "../../domain/PaginatedResponse";
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
+import {
+  Button,
+  TableFooter,
+  TablePagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 
 interface Props {
   paginatedEmployeesResponse: PaginatedResponse<User>;

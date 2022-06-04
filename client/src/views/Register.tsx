@@ -1,8 +1,8 @@
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../api";
-import RegistrationForm from "../components/RegistrationForm";
 import { UserPayload } from "../domain/User";
+import toast from "react-hot-toast";
+import RegistrationForm from "../components/RegistrationForm";
 import onError from "../utils/onError";
 
 export default function Register() {

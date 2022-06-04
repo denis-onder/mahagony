@@ -1,9 +1,9 @@
-import LoginForm from "../components/LoginForm";
 import { auth } from "../api";
 import { useNavigate } from "react-router-dom";
+import { LoginPayload } from "../domain/Auth";
+import LoginForm from "../components/LoginForm";
 import toast from "react-hot-toast";
 import onError from "../utils/onError";
-import { LoginPayload } from "../domain/Auth";
 
 export default function Login() {
   const navigate = useNavigate();

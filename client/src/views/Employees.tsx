@@ -1,15 +1,15 @@
 import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { users } from "../api";
+import { PaginatedResponse } from "../domain/PaginatedResponse";
+import { User, UserPayload } from "../domain/User";
+import { DeleteEntityModalTarget } from "../utils/modalUtils";
+import toast from "react-hot-toast";
 import DeleteEntityModal from "../components/DeleteEntityModal";
 import AddEmployeeModal from "../components/Employees/AddEmployeeModal";
 import EmployeesTable from "../components/Employees/EmployeesTable";
 import Loader from "../components/Loader";
-import { PaginatedResponse } from "../domain/PaginatedResponse";
-import { User, UserPayload } from "../domain/User";
-import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import onError from "../utils/onError";
 
 export default function Employees() {

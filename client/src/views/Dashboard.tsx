@@ -1,4 +1,7 @@
+import * as api from "../api";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
@@ -9,20 +12,11 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import DrawerListItems from "../components/Dashboard/DrawerListItems";
-import EmployeesTable from "../components/Employees/EmployeesTable";
-import PermissionsTable from "../components/Permissions/PermissionsTable";
-import { useEffect, useState } from "react";
-import * as api from "../api";
 import onError from "../utils/onError";
-import { User } from "../domain/User";
-import { Permission } from "../domain/Permission";
 import Loader from "../components/Loader";
-import { Outlet, useNavigate } from "react-router-dom";
 
 const drawerWidth: number = 240;
 

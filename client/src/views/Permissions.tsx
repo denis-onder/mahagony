@@ -1,15 +1,15 @@
+import * as api from "../api";
 import { Button, Grid, Paper, Typography } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as api from "../api";
+import { Permission, PermissionPayload } from "../domain/Permission";
+import { Box } from "@mui/system";
+import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import PermissionsTable from "../components/Permissions/PermissionsTable";
 import Loader from "../components/Loader";
-import { Permission, PermissionPayload } from "../domain/Permission";
 import onError from "../utils/onError";
-import { Box } from "@mui/system";
 import AddPermissionModal from "../components/Permissions/AddPermissionModal";
 import toast from "react-hot-toast";
-import { DeleteEntityModalTarget } from "../utils/modalUtils";
 import DeleteEntityModal from "../components/DeleteEntityModal";
 
 export default function Permissions() {
