@@ -16,7 +16,7 @@ export default function Login() {
 
       if (token) {
         toast.success("You are logged in!");
-        navigate("/");
+        navigate("/employees");
       }
     } catch (error) {
       onError(error);

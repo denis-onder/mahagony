@@ -22,13 +22,13 @@ export default function DrawerListItems() {
 
   return (
     <React.Fragment>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate("/employees")}>
         <ListItemIcon>
           <PeopleIcon />
         </ListItemIcon>
         <ListItemText primary="Employees" />
       </ListItemButton>
-      <ListItemButton>
+      <ListItemButton onClick={() => navigate("/permissions")}>
         <ListItemIcon>
           <RuleIcon />
         </ListItemIcon>

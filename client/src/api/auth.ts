@@ -28,3 +28,12 @@ export const logOut = async () => {
     onError(error);
   }
 };
+
+export const validate = async () => {
+  try {
+    const response = await client.get("/auth/validate");
+    return response.data;
+  } catch (error) {
+    onError(error);
+  }
+};

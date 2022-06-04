@@ -24,6 +24,9 @@ export default class AuthenticationController {
     this.router.post("/logout", authMiddleware, (req, res) =>
       this.logOut(req, res)
     );
+    this.router.get("/validate", authMiddleware, (req, res) =>
+      this.validate(req, res)
+    );
   }
 
   register(req: Request, res: Response): void {
@@ -104,6 +107,14 @@ export default class AuthenticationController {
         .status(200)
         .cookie("token", "", { expires: new Date(0) })
         .send("Logged out");
+    } catch (error) {
+      res.status(400).json({ error });
+    }
+  }
+
+  async validate(req: AuthorizedRequest, res: Response): Promise<void> {
+    try {
+      res.status(200).send("Valid");
     } catch (error) {
       res.status(400).json({ error });
     }

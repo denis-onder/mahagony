@@ -14,15 +14,15 @@ import Paper from "@mui/material/Paper";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import DrawerListItems from "../components/Dashboard/DrawerListItems";
-import Employees from "../components/Dashboard/Employees";
-import Permissions from "../components/Dashboard/Permissions";
+import EmployeesTable from "../components/Employees/EmployeesTable";
+import PermissionsTable from "../components/Permissions/PermissionsTable";
 import { useEffect, useState } from "react";
 import * as api from "../api";
 import onError from "../utils/onError";
 import { User } from "../domain/User";
 import { Permission } from "../domain/Permission";
 import Loader from "../components/Loader";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const drawerWidth: number = 240;
 
@@ -79,29 +79,19 @@ const mdTheme = createTheme();
 function DashboardContent() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [employees, setEmployees] = useState<Array<User>>([]);
-  const [permissions, setPermissions] = useState<Array<Permission>>([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    function loadEmployees() {
-      return api.users.findUsers();
-    }
-
-    function loadPermissions() {
-      return api.permissions.findPermissions();
+    function validateToken() {
+      return api.auth.validate();
     }
 
     async function load() {
       try {
         setLoading(true);
 
-        const employees = await loadEmployees();
-        const permissions = await loadPermissions();
-
-        setEmployees(employees);
-        setPermissions(permissions);
+        await validateToken();
       } catch (error) {
         navigate("/login");
         onError("Please Login Again.");
@@ -186,40 +176,7 @@ function DashboardContent() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {/* Employees */}
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    marginBottom="12px"
-                    marginLeft="6px"
-                  >
-                    Employees
-                  </Typography>
-                  <Employees employees={employees} />
-                </Paper>
-              </Grid>
-            </Grid>
-            {/* Divider */}
-            <Divider style={{ marginTop: "10px", marginBottom: "10px" }} />
-            {/* Permissions */}
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  <Typography
-                    variant="h6"
-                    component="h6"
-                    marginBottom="12px"
-                    marginLeft="6px"
-                  >
-                    Permissions
-                  </Typography>
-                  <Permissions permissions={permissions} />
-                </Paper>
-              </Grid>
-            </Grid>
+            <Outlet />
           </Container>
         </Box>
       </Box>
