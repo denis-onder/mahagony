@@ -80,8 +80,6 @@ export default function Employees() {
   }, [changePage, triggerLoad, debouncedName, status]);
 
   const onChangePage = (page: number) => {
-    if (page === 0) page = 1;
-
     setPage(page);
     setChangePage((p) => !p);
   };
@@ -148,15 +146,16 @@ export default function Employees() {
             </Box>
             <Box sx={{ marginBottom: 2 }}>
               <TextField
-                placeholder="Search By Name"
+                placeholder="Search"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <FormControl sx={{ marginLeft: 1, minWidth: 120 }}>
-                <InputLabel>Status?</InputLabel>
+                <InputLabel>Status</InputLabel>
                 <Select
                   value={`${status}`}
-                  label="Status?"
+                  label="Status"
+                  placeholder="Active/Inactive"
                   onChange={(e) => setStatus(e.target.value === "true")}
                 >
                   <MenuItem value="true">Active</MenuItem>

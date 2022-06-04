@@ -134,7 +134,7 @@ export default function EmployeesTable({
     _: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
-    onPageChange(newPage);
+    onPageChange(newPage + 1);
   };
 
   const navigate = useNavigate();
@@ -208,7 +208,7 @@ export default function EmployeesTable({
         colSpan={3}
         count={paginatedEmployeesResponse.count}
         rowsPerPage={limit}
-        page={paginatedEmployeesResponse.currentPage}
+        page={paginatedEmployeesResponse.currentPage - 1}
         SelectProps={{
           inputProps: {
             "aria-label": "rows per page",
